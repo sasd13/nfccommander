@@ -3,6 +3,8 @@
     package="fr.intech.nfccommander">
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
 

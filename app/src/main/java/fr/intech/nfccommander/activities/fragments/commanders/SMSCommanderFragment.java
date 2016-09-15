@@ -1,4 +1,4 @@
-package fr.intech.nfccommander.activities.fragments.commander;
+package fr.intech.nfccommander.activities.fragments.commanders;
 
 import android.nfc.FormatException;
 import android.nfc.Tag;
@@ -13,15 +13,15 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-import fr.intech.nfccommander.EnumCommanderType;
+import fr.intech.nfccommander.command.EnumCommanderType;
 import fr.intech.nfccommander.R;
-import fr.intech.nfccommander.ICommander;
+import fr.intech.nfccommander.command.ICommander;
 import fr.intech.nfccommander.handlers.TagIOHandler;
 
 public class SMSCommanderFragment extends Fragment implements ICommander {
 
     private static class ViewHolder {
-        private EditText editTextMessage;
+        private EditText editTextPhone, editTextMessage;
     }
 
     private ViewHolder formSMS;
@@ -48,6 +48,7 @@ public class SMSCommanderFragment extends Fragment implements ICommander {
 
     private void buildView(View view) {
         formSMS.editTextMessage = (EditText) view.findViewById(R.id.fragment_commander_sms_edittext_message);
+        formSMS.editTextPhone = (EditText) view.findViewById(R.id.fragment_commander_sms_edittext_phone);
     }
 
     @Override

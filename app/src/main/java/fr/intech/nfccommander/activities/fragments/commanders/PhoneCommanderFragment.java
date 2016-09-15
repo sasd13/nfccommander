@@ -1,4 +1,4 @@
-package fr.intech.nfccommander.activities.fragments.commander;
+package fr.intech.nfccommander.activities.fragments.commanders;
 
 import android.nfc.FormatException;
 import android.nfc.Tag;
@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-import fr.intech.nfccommander.EnumCommanderType;
+import fr.intech.nfccommander.command.EnumCommanderType;
 import fr.intech.nfccommander.R;
-import fr.intech.nfccommander.ICommander;
+import fr.intech.nfccommander.command.ICommander;
 import fr.intech.nfccommander.handlers.TagIOHandler;
 
 public class PhoneCommanderFragment extends Fragment implements ICommander {

@@ -1,7 +1,7 @@
-package fr.intech.nfccommander.activities.fragments.commander;
+package fr.intech.nfccommander.activities.fragments.commanders;
 
-import fr.intech.nfccommander.EnumCommanderType;
-import fr.intech.nfccommander.ICommander;
+import fr.intech.nfccommander.command.EnumCommanderType;
+import fr.intech.nfccommander.command.ICommander;
 
 public class CommanderFragmentFactory {
 

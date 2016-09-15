@@ -23,11 +23,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fr.intech.nfccommander.EnumCommanderType;
-import fr.intech.nfccommander.ICommander;
 import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.fragments.TagsFragment;
-import fr.intech.nfccommander.activities.fragments.commander.CommanderFragmentFactory;
+import fr.intech.nfccommander.activities.fragments.commanders.CommanderFragmentFactory;
+import fr.intech.nfccommander.command.EnumCommanderType;
+import fr.intech.nfccommander.command.ICommander;
+import fr.intech.nfccommander.handlers.TagCommandHandler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             chosenTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
             saveTagIfNotListed();
-            showCommandersDialog();
+            launchCommand();
         }
     }
 
@@ -123,7 +124,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showCommandersDialog() {
+    private void launchCommand() {
+        TagCommandHandler.launchCommandOrShowCommanders(chosenTag, this);
+    }
+
+    public void showCommandersDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.fragment_tags_dialog_commander);
         builder.setItems(getResources().getStringArray(R.array.commanders), new DialogInterface.OnClickListener() {

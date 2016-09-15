@@ -1,4 +1,4 @@
-package fr.intech.nfccommander.activities.fragments.commander;
+package fr.intech.nfccommander.activities.fragments.commanders;
 
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import fr.intech.nfccommander.R;
-import fr.intech.nfccommander.ICommander;
+import fr.intech.nfccommander.command.ICommander;
 
 public class AppCommanderFragment extends Fragment implements ICommander {
 

@@ -1,4 +1,4 @@
-package fr.intech.nfccommander;
+package fr.intech.nfccommander.command;
 
 import android.nfc.Tag;
 

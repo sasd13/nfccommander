@@ -15,10 +15,17 @@
             android:text="@string/fragment_commander_sms_textview_message" />
 
         <EditText
+            android:id="@+id/fragment_commander_sms_edittext_phone"
+            android:layout_width="@dimen/fragment_commander_sms_edittext_width"
+            android:layout_height="wrap_content"
+            android:hint="@string/fragment_commander_phone_edittext_phone_hint"
+            android:inputType="phone"/>
+
+        <EditText
             android:id="@+id/fragment_commander_sms_edittext_message"
             android:layout_width="@dimen/fragment_commander_sms_edittext_width"
             android:layout_height="wrap_content"
-            android:hint="@string/fragment_commander_sms_edittext_message_hint"
+            android:hint="@string/fragment_commander_sms_edittext_sms_hint"
             android:inputType="textMultiLine"/>
 
     </LinearLayout>

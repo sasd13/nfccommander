@@ -9,9 +9,11 @@ import android.nfc.tech.Ndef;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import fr.intech.nfccommander.EnumCommanderType;
+import fr.intech.nfccommander.command.EnumCommanderType;
 
 public class TagIOHandler {
+
+    public static final String SEPARATOR = "#";
 
     public static String read(Tag tag) {
         String text = null;
