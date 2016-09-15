@@ -1,10 +1,14 @@
 package fr.intech.nfccommander.activities;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -12,9 +16,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fr.intech.nfccommander.EnumCommanderType;
 import fr.intech.nfccommander.ICommander;
@@ -24,8 +31,10 @@ import fr.intech.nfccommander.activities.fragments.commander.CommanderFragmentFa
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<Tag> tags;
-    private Tag linkedTag;
+    private static final String PREFERENCES_KEY_TAGS = "tags_ids";
+
+    private List<String> linkedTags;
+    private Tag chosenTag;
     private ICommander commander;
     private MenuItem menuItem;
 
@@ -34,7 +43,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tags = new ArrayList<>();
+        linkedTags = new ArrayList<>();
+
+        Set<String> savedTags = PreferenceManager.getDefaultSharedPreferences(this).getStringSet(PREFERENCES_KEY_TAGS, null);
+        if (savedTags != null) {
+            linkedTags.addAll(Arrays.asList(savedTags.toArray(new String[savedTags.size()])));
+        }
 
         listTagsFragment();
     }
@@ -46,37 +60,22 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.activity_main_fragment_container, TagsFragment.newInstance())
+                .replace(R.id.activity_main_fragment_container, TagsFragment.newInstance(linkedTags))
                 .commit();
     }
 
-    public void startCommanderFragment(EnumCommanderType type, String tagId) {
+    public void startCommanderFragment(EnumCommanderType type) {
         if (menuItem != null) {
             menuItem.setVisible(true);
         }
 
         commander = CommanderFragmentFactory.make(type);
-        linkedTag = findTagById(tagId.getBytes());
 
-        if (linkedTag == null) {
-            Toast.makeText(this, R.string.fragment_tags_error_tag_not_connected, Toast.LENGTH_SHORT).show();
-        } else {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.activity_main_fragment_container, (Fragment) commander)
-                    .addToBackStack(null)
-                    .commit();
-        }
-    }
-
-    private Tag findTagById(byte[] tagId) {
-        for (Tag tag : tags) {
-            if (Arrays.equals(tag.getId(), tagId)) {
-                return tag;
-            }
-        }
-
-        return null;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.activity_main_fragment_container, (Fragment) commander)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -104,13 +103,36 @@ public class MainActivity extends AppCompatActivity {
 
     private void processIntent(Intent intent) {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            chosenTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-            if (findTagById(tag.getId()) == null) {
-                tags.add(tag);
-                //TODO : save tagId to SharedPreferences
-            }
+            saveTagIfNotListed();
+            showCommandersDialog();
         }
+    }
+
+    private void saveTagIfNotListed() {
+        String id = new String(chosenTag.getId(), StandardCharsets.UTF_8);
+
+        if (!linkedTags.contains(id)) {
+            linkedTags.add(id);
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            editor.putStringSet(PREFERENCES_KEY_TAGS, new HashSet<>(linkedTags));
+            editor.apply();
+
+            Toast.makeText(this, R.string.tag_saved, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showCommandersDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.fragment_tags_dialog_commander);
+        builder.setItems(getResources().getStringArray(R.array.commanders), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                startCommanderFragment(EnumCommanderType.values()[i]);
+            }
+        });
+        builder.create().show();
     }
 
     @Override
@@ -144,6 +166,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveCommand() {
-        commander.command(linkedTag);
+        commander.command(chosenTag);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (commander != null) {
+            commander = null;
+
+            if (menuItem != null) {
+                menuItem.setVisible(false);
+            }
+        }
+
+        super.onBackPressed();
     }
 }

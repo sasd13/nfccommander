@@ -9,7 +9,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import fr.intech.nfccommander.R;
-import fr.intech.nfccommander.activities.MainActivity;
 
 public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
 
@@ -24,12 +23,10 @@ public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private List<String> tagsIds;
-    private MainActivity mainActivity;
+    private List<String> tags;
 
-    public TagsRecyclerViewAdapter(List<String> tagsIds, MainActivity mainActivity) {
-        this.tagsIds = tagsIds;
-        this.mainActivity = mainActivity;
+    public TagsRecyclerViewAdapter(List<String> tags) {
+        this.tags = tags;
     }
 
     @Override
@@ -43,14 +40,11 @@ public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         TagViewHolder tagViewHolder = (TagViewHolder) holder;
 
-        String tagId = tagsIds.get(position);
-
-        tagViewHolder.textView.setText(new String(tagId));
-        tagViewHolder.textView.setOnClickListener(new TagRecyclerViewItemListener(tagId, mainActivity));
+        tagViewHolder.textView.setText(tags.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return tagsIds.size();
+        return tags.size();
     }
 }

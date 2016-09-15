@@ -55,9 +55,9 @@ public class SMSCommanderFragment extends Fragment implements ICommander {
         try {
             TagIOHandler.write(tag, formSMS.editTextMessage.getText().toString(), EnumCommanderType.SMS);
         } catch (FormatException e) {
-            showError(R.string.error_writing);
+            showError(R.string.error_tag_writing);
         } catch (IOException e) {
-            showError(R.string.error_writing);
+            showError(R.string.error_tag_writing);
         }
     }
 

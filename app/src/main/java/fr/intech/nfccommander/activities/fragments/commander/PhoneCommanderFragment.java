@@ -55,9 +55,9 @@ public class PhoneCommanderFragment extends Fragment implements ICommander {
         try {
             TagIOHandler.write(tag, formPhone.editTextNumber.getText().toString(), EnumCommanderType.PHONE);
         } catch (FormatException e) {
-            showError(R.string.error_writing);
+            showError(R.string.error_tag_writing);
         } catch (IOException e) {
-            showError(R.string.error_writing);
+            showError(R.string.error_tag_writing);
         }
     }
 
