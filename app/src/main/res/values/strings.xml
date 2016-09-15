@@ -8,4 +8,7 @@
     <string name="fragment_commander_sms_textview_message">Enter the message</string>
     <string name="fragment_commander_sms_edittext_message_hint">sms</string>
     <string name="activity_main_menu_done">Done</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

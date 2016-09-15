@@ -1,4 +1,4 @@
-package fr.intech.nfccommander.handler;
+package fr.intech.nfccommander.handlers;
 
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -14,7 +14,7 @@ import fr.intech.nfccommander.EnumCommanderType;
 /**
  * Created by ssaidali2 on 15/09/2016.
  */
-public class TagHandler {
+public class TagIOHandler {
 
     public static String read(Tag tag) {
         String text = null;

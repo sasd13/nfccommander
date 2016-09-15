@@ -16,7 +16,7 @@ import java.io.IOException;
 import fr.intech.nfccommander.EnumCommanderType;
 import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.ICommander;
-import fr.intech.nfccommander.handler.TagHandler;
+import fr.intech.nfccommander.handlers.TagIOHandler;
 
 public class PhoneCommanderFragment extends Fragment implements ICommander {
 
@@ -53,7 +53,7 @@ public class PhoneCommanderFragment extends Fragment implements ICommander {
     @Override
     public void command(Tag tag) {
         try {
-            TagHandler.write(tag, formPhone.editTextNumber.getText().toString(), EnumCommanderType.PHONE);
+            TagIOHandler.write(tag, formPhone.editTextNumber.getText().toString(), EnumCommanderType.PHONE);
         } catch (FormatException e) {
             showError(R.string.error_writing);
         } catch (IOException e) {
