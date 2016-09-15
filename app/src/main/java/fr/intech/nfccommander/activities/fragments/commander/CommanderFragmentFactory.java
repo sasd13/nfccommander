@@ -3,9 +3,6 @@ package fr.intech.nfccommander.activities.fragments.commander;
 import fr.intech.nfccommander.EnumCommanderType;
 import fr.intech.nfccommander.ICommander;
 
-/**
- * Created by ssaidali2 on 15/09/2016.
- */
 public class CommanderFragmentFactory {
 
     private CommanderFragmentFactory() {}

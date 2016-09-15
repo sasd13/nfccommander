@@ -1,6 +1,5 @@
 package fr.intech.nfccommander.adapters;
 
-import android.nfc.Tag;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +8,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by ssaidali2 on 15/09/2016.
- */
+import fr.intech.nfccommander.R;
+import fr.intech.nfccommander.activities.MainActivity;
+
 public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private static class TagViewHolder extends RecyclerView.ViewHolder {
@@ -20,18 +19,22 @@ public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
 
         public TagViewHolder(View view) {
             super(view);
+
+            textView = (TextView) view.findViewById(R.id.recyclerview_item_tag_textview);
         }
     }
 
-    private List<Tag> tags;
+    private List<String> tagsIds;
+    private MainActivity mainActivity;
 
-    public TagsRecyclerViewAdapter(List<Tag> tags) {
-        this.tags = tags;
+    public TagsRecyclerViewAdapter(List<String> tagsIds, MainActivity mainActivity) {
+        this.tagsIds = tagsIds;
+        this.mainActivity = mainActivity;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(0, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_tag, parent, false);
 
         return new TagViewHolder(view);
     }
@@ -40,11 +43,14 @@ public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         TagViewHolder tagViewHolder = (TagViewHolder) holder;
 
-        Tag tag = tags.get(position);
+        String tagId = tagsIds.get(position);
+
+        tagViewHolder.textView.setText(new String(tagId));
+        tagViewHolder.textView.setOnClickListener(new TagRecyclerViewItemListener(tagId, mainActivity));
     }
 
     @Override
     public int getItemCount() {
-        return tags.size();
+        return tagsIds.size();
     }
 }

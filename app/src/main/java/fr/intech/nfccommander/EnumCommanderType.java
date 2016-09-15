@@ -1,8 +1,5 @@
 package fr.intech.nfccommander;
 
-/**
- * Created by ssaidali2 on 15/09/2016.
- */
 public enum  EnumCommanderType {
     PHONE("PHONE"),
     SMS("SMS"),

@@ -5,5 +5,6 @@
 
     <item android:id="@+id/activity_main_menu_done"
         android:title="@string/activity_main_menu_done"
+        android:visible="false"
         flousy:showAsAction="ifRoom"/>
 </menu>

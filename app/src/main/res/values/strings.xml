@@ -8,7 +8,12 @@
     <string name="fragment_commander_sms_textview_message">Enter the message</string>
     <string name="fragment_commander_sms_edittext_message_hint">sms</string>
     <string name="activity_main_menu_done">Done</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fragment_tags_error_tag_not_connected">Tag not connected</string>
+    <string name="fragment_tags_dialog_commander">Choose commander</string>
+    <string-array name="commanders">
+        <item>Phone</item>
+        <item>SMS</item>
+        <item>App</item>
+    </string-array>
+    <string name="recyclerview_item_tag_textview">Tag</string>
 </resources>
