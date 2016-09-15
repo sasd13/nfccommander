@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">NFC Commander</string>
+    <string name="error_detected">Error format</string>
+    <string name="error_writing">Error writing</string>
+    <string name="ok_writing">Ok writing</string>
+    <string name="fragment_commander_phone_textview_number">Enter the phone number</string>
+    <string name="fragment_commander_phone_edittext_number_hint">phone</string>
+    <string name="fragment_commander_sms_textview_message">Enter the message</string>
+    <string name="fragment_commander_sms_edittext_message_hint">sms</string>
+    <string name="activity_main_menu_done">Done</string>
 </resources>

@@ -2,4 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fragment_commander_phone_edittext_width">200dp</dimen>
+    <dimen name="fragment_commander_sms_edittext_width">300dp</dimen>
 </resources>
