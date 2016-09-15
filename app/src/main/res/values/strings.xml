@@ -16,4 +16,5 @@
     <string name="error_tag_writing">Error tag writing</string>
     <string name="tag_writed">Tag writed</string>
     <string name="error_tag_launch_command">Error tag launch command</string>
+    <string name="error_tag_reading">Error tag reading</string>
 </resources>
