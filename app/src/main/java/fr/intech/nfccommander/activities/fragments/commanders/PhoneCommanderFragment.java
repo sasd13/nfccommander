@@ -1,30 +1,27 @@
 package fr.intech.nfccommander.activities.fragments.commanders;
 
-import android.nfc.FormatException;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.io.IOException;
-
-import fr.intech.nfccommander.command.EnumCommanderType;
+import fr.intech.nfccommander.EnumCommandType;
 import fr.intech.nfccommander.R;
-import fr.intech.nfccommander.command.ICommander;
-import fr.intech.nfccommander.handlers.TagIOHandler;
+import fr.intech.nfccommander.activities.MainActivity;
+import fr.intech.nfccommander.command.PhoneCommand;
 
 public class PhoneCommanderFragment extends Fragment implements ICommander {
 
     private static class ViewHolder {
-        private EditText editTextNumber;
+        private EditText editTextPhoneNumber;
+        private Button buttonSubmit;
     }
 
-    private ViewHolder formPhone;
+    private ViewHolder form;
+    private MainActivity mainActivity;
 
     public static PhoneCommanderFragment newInstance() {
         return new PhoneCommanderFragment();
@@ -34,7 +31,8 @@ public class PhoneCommanderFragment extends Fragment implements ICommander {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        formPhone = new ViewHolder();
+        form = new ViewHolder();
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -47,21 +45,25 @@ public class PhoneCommanderFragment extends Fragment implements ICommander {
     }
 
     private void buildView(View view) {
-        formPhone.editTextNumber = (EditText) view.findViewById(R.id.fragment_commander_phone_edittext_number);
+        form.editTextPhoneNumber = (EditText) view.findViewById(R.id.fragment_commander_phone_edittext_phonenumber);
+        //form.buttonSubmit = (Button) view.findViewById(0);
+
+        form.buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveCommand();
+            }
+        });
     }
 
     @Override
-    public void command(Tag tag) {
-        try {
-            TagIOHandler.write(tag, formPhone.editTextNumber.getText().toString(), EnumCommanderType.PHONE);
-        } catch (FormatException e) {
-            showError(R.string.error_tag_writing);
-        } catch (IOException e) {
-            showError(R.string.error_tag_writing);
-        }
-    }
+    public void saveCommand() {
+        String phoneNumber = form.editTextPhoneNumber.getText().toString();
 
-    private void showError(@StringRes int message) {
-        Toast.makeText(getContext(), getString(message), Toast.LENGTH_SHORT).show();
+        if (phoneNumber.trim().isEmpty()) {
+            mainActivity.displayToast(R.string.error_form);
+        } else {
+            mainActivity.writeTag(EnumCommandType.PHONE, new PhoneCommand(phoneNumber));
+        }
     }
 }

@@ -12,9 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.nio.charset.StandardCharsets;
@@ -24,22 +21,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import fr.intech.nfccommander.EnumCommandType;
 import fr.intech.nfccommander.R;
-import fr.intech.nfccommander.activities.fragments.TagsFragment;
-import fr.intech.nfccommander.activities.fragments.commanders.CommanderFragmentFactory;
-import fr.intech.nfccommander.command.EnumCommanderType;
-import fr.intech.nfccommander.command.ICommander;
-import fr.intech.nfccommander.command.launcher.CommandLauncherFactory;
-import fr.intech.nfccommander.handlers.TagIOHandler;
+import fr.intech.nfccommander.activities.fragments.TagsListFragment;
+import fr.intech.nfccommander.activities.fragments.commanders.CommanderFactory;
+import fr.intech.nfccommander.command.CommandFactory;
+import fr.intech.nfccommander.command.ICommand;
+import fr.intech.nfccommander.tasks.TagTaskReader;
+import fr.intech.nfccommander.tasks.TagTaskWriter;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String PREFERENCES_KEY_TAGS = "tags_ids";
+    private static final String SEPARATOR = "#";
 
     private List<String> linkedTags;
     private Tag chosenTag;
-    private ICommander commander;
-    private MenuItem menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         linkedTags = new ArrayList<>();
 
         loadSavedTags();
-         startTagsFragment();
+        startTagsListFragment();
     }
 
     private void loadSavedTags() {
@@ -60,28 +57,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void startTagsFragment() {
-        if (menuItem != null) {
-            menuItem.setVisible(false);
-        }
-
+    private void startTagsListFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.activity_main_fragment_container, TagsFragment.newInstance(linkedTags))
-                .commit();
-    }
-
-    public void startCommanderFragment(EnumCommanderType type) {
-        if (menuItem != null) {
-            menuItem.setVisible(true);
-        }
-
-        commander = CommanderFragmentFactory.make(type);
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.activity_main_fragment_container, (Fragment) commander)
-                .addToBackStack(null)
+                .replace(R.id.activity_main_fragment_container, TagsListFragment.newInstance(linkedTags))
                 .commit();
     }
 
@@ -113,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             chosenTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
             saveTagIfNotListed();
-            //launchCommand();
+            readTag();
         }
     }
 
@@ -126,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putStringSet(PREFERENCES_KEY_TAGS, new HashSet<>(linkedTags));
             editor.apply();
 
-            Toast.makeText(this, R.string.tag_saved, Toast.LENGTH_SHORT).show();
+            displayToast(R.string.tag_saved);
         }
     }
 
@@ -136,71 +115,55 @@ public class MainActivity extends AppCompatActivity {
         builder.setItems(getResources().getStringArray(R.array.commanders), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                startCommanderFragment(EnumCommanderType.values()[i]);
+                startCommanderFragment(EnumCommandType.values()[i]);
             }
         });
         builder.create().show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_main_menu, menu);
-
-        return true;
+    private void startCommanderFragment(EnumCommandType type) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.activity_main_fragment_container, (Fragment) CommanderFactory.make(type))
+                .addToBackStack(null)
+                .commit();
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean prepared = super.onPrepareOptionsMenu(menu);
-
-        menuItem = menu.findItem(R.id.activity_main_menu_done);
-
-        return prepared;
+    public void readTag() {
+        new TagTaskReader(this, chosenTag).execute();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.activity_main_menu_done:
-                saveCommand();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-        return true;
-    }
-
-    private void saveCommand() {
-        commander.command(chosenTag);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (commander != null) {
-            commander = null;
-
-            if (menuItem != null) {
-                menuItem.setVisible(false);
-            }
-        }
-
-        super.onBackPressed();
+    public void writeTag(EnumCommandType type, ICommand command) {
+        new TagTaskWriter(this, chosenTag).execute(type.getCode() + SEPARATOR + command.create());
     }
 
     public void onReadTagSucceeded(String text) {
-        String code = text.substring(0, text.indexOf(TagIOHandler.SEPARATOR));
-        String message = text.substring(text.indexOf(TagIOHandler.SEPARATOR) + 1);
+        if (text == null) {
+            displayToast(R.string.error_tag_reading);
+            return;
+        }
 
-        CommandLauncherFactory.make(EnumCommanderType.find(code)).launch(this, message);
+        int indexOfSeparator = text.indexOf(SEPARATOR);
+
+        if (indexOfSeparator >= 0) {
+            String code = text.substring(0, indexOfSeparator);
+            EnumCommandType type = EnumCommandType.find(code);
+
+            if (type == null) {
+                displayToast(R.string.error_tag_reading);
+                return;
+            }
+
+            String message = text.substring(indexOfSeparator + 1);
+            CommandFactory.make(type).read(this, message);
+        }
     }
 
     public void onWriteTagSucceeded() {
-        Toast.makeText(this, R.string.tag_writed, Toast.LENGTH_SHORT).show();
+        displayToast(R.string.tag_writed);
     }
 
-    public void onError(@StringRes int message) {
+    public void displayToast(@StringRes int message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

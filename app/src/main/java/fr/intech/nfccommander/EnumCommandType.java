@@ -1,6 +1,6 @@
-package fr.intech.nfccommander.command;
+package fr.intech.nfccommander;
 
-public enum EnumCommanderType {
+public enum EnumCommandType {
     PHONE("PHONE"),
     SMS("SMS"),
     APP("APP"),
@@ -8,7 +8,7 @@ public enum EnumCommanderType {
 
     private String code;
 
-    private EnumCommanderType(String code) {
+    private EnumCommandType(String code) {
         this.code = code;
     }
 
@@ -16,8 +16,8 @@ public enum EnumCommanderType {
         return code;
     }
 
-    public static EnumCommanderType find(String code) {
-        for (EnumCommanderType type : values()) {
+    public static EnumCommandType find(String code) {
+        for (EnumCommandType type : values()) {
             if (type.code.equalsIgnoreCase(code)) {
                 return type;
             }

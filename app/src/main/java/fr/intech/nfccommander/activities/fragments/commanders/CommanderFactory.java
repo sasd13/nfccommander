@@ -1,13 +1,12 @@
 package fr.intech.nfccommander.activities.fragments.commanders;
 
-import fr.intech.nfccommander.command.EnumCommanderType;
-import fr.intech.nfccommander.command.ICommander;
+import fr.intech.nfccommander.EnumCommandType;
 
-public class CommanderFragmentFactory {
+public class CommanderFactory {
 
-    private CommanderFragmentFactory() {}
+    private CommanderFactory() {}
 
-    public static ICommander make(EnumCommanderType type) {
+    public static ICommander make(EnumCommandType type) {
         switch (type) {
             case PHONE: return PhoneCommanderFragment.newInstance();
             case SMS: return SMSCommanderFragment.newInstance();

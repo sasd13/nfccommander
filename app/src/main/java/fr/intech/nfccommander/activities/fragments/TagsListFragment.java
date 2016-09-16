@@ -13,15 +13,15 @@ import java.util.List;
 import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.adapters.TagsRecyclerViewAdapter;
 
-public class TagsFragment extends Fragment {
+public class TagsListFragment extends Fragment {
 
     private List<String> tags;
 
-    public static TagsFragment newInstance(List<String> tags) {
-        TagsFragment tagsFragment = new TagsFragment();
-        tagsFragment.tags = tags;
+    public static TagsListFragment newInstance(List<String> tags) {
+        TagsListFragment tagsListFragment = new TagsListFragment();
+        tagsListFragment.tags = tags;
 
-        return tagsFragment;
+        return tagsListFragment;
     }
 
     @Override

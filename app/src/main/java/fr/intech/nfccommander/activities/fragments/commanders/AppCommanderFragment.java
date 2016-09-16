@@ -1,6 +1,5 @@
 package fr.intech.nfccommander.activities.fragments.commanders;
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import fr.intech.nfccommander.R;
-import fr.intech.nfccommander.command.ICommander;
+import fr.intech.nfccommander.activities.MainActivity;
 
 public class AppCommanderFragment extends Fragment implements ICommander {
+
+    private MainActivity mainActivity;
 
     public static AppCommanderFragment newInstance() {
         return new AppCommanderFragment();
@@ -19,6 +20,8 @@ public class AppCommanderFragment extends Fragment implements ICommander {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -35,7 +38,7 @@ public class AppCommanderFragment extends Fragment implements ICommander {
     }
 
     @Override
-    public void command(Tag tag) {
+    public void saveCommand() {
 
     }
 }

@@ -10,24 +10,26 @@ import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.MainActivity;
 import fr.intech.nfccommander.handlers.TagIOHandler;
 
-public class TagTaskReader extends AsyncTask<Tag, Intent, String> {
+public class TagTaskReader extends AsyncTask<Void, Intent, String> {
 
     private MainActivity mainActivity;
+    private Tag tag;
 
-    public TagTaskReader(MainActivity mainActivity) {
+    public TagTaskReader(MainActivity mainActivity, Tag tag) {
         this.mainActivity = mainActivity;
+        this.tag = tag;
     }
 
     @Override
-    protected String doInBackground(Tag... tags) {
+    protected String doInBackground(Void... aVoids) {
         String text = null;
 
         if (!isCancelled()) {
             try {
-                text = TagIOHandler.read(tags[0]);
+                text = TagIOHandler.read(tag);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                mainActivity.onError(R.string.error_tag_reading);
+                mainActivity.displayToast(R.string.error_tag_reading);
             }
         }
 

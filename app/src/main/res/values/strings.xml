@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">NFC Commander</string>
-    <string name="fragment_commander_phone_textview_phone">Enter the phone number</string>
-    <string name="fragment_commander_phone_edittext_phone_hint">phone</string>
-    <string name="fragment_commander_sms_textview_sms">Enter the message</string>
-    <string name="fragment_commander_sms_edittext_sms_hint">sms</string>
+    <string name="fragment_commander_phone_textview_phonenumber">Enter the phone number</string>
+    <string name="fragment_commander_phone_edittext_phonenumber_hint">phone</string>
+    <string name="fragment_commander_sms_textview_message">Enter the message</string>
+    <string name="fragment_commander_sms_edittext_message_hint">sms</string>
     <string name="activity_main_menu_done">Done</string>
     <string name="fragment_tags_dialog_commander">Choose commander</string>
     <string-array name="commanders">
@@ -17,4 +17,5 @@
     <string name="tag_writed">Tag writed</string>
     <string name="error_tag_launch_command">Error tag launch command</string>
     <string name="error_tag_reading">Error tag reading</string>
+    <string name="error_form">Error form</string>
 </resources>

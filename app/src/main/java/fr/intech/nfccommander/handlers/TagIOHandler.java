@@ -10,11 +10,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-import fr.intech.nfccommander.command.EnumCommanderType;
-
 public class TagIOHandler {
-
-    public static final String SEPARATOR = "#";
 
     public static String read(Tag tag) throws UnsupportedEncodingException {
         Ndef ndef = Ndef.get(tag);
@@ -24,7 +20,7 @@ public class TagIOHandler {
 
             for (NdefRecord ndefRecord : ndefRecords) {
                 if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
-                    return readText(ndefRecord);
+                    return readRecord(ndefRecord);
                 }
             }
         }
@@ -32,7 +28,7 @@ public class TagIOHandler {
         return null;
     }
 
-    private static String readText(NdefRecord ndefRecord) throws UnsupportedEncodingException {
+    private static String readRecord(NdefRecord ndefRecord) throws UnsupportedEncodingException {
         byte[] payload = ndefRecord.getPayload();
         String textEnconding = (payload[0] & 128) == 0 ? "UTF-8" : "UTF-16";
         int languageCodeLength = payload[0] & 0063;
@@ -40,8 +36,8 @@ public class TagIOHandler {
         return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEnconding);
     }
 
-    public static void write(Tag tag, String text, EnumCommanderType type) throws UnsupportedEncodingException, FormatException, IOException {
-        NdefRecord[] records = new NdefRecord[]{ createRecord(type.getCode() + text) };
+    public static void write(Tag tag, String text) throws UnsupportedEncodingException, FormatException, IOException {
+        NdefRecord[] records = new NdefRecord[]{ createRecord(text) };
         NdefMessage message = new NdefMessage(records);
         Ndef ndef = Ndef.get(tag);
         ndef.connect();
