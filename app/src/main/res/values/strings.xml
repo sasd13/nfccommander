@@ -18,4 +18,5 @@
     <string name="error_tag_launch_command">Error tag launch command</string>
     <string name="error_tag_reading">Error tag reading</string>
     <string name="error_form">Error form</string>
+    <string name="button_submit">Submit</string>
 </resources>

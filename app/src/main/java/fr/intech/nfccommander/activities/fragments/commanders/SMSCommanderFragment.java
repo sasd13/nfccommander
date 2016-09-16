@@ -1,6 +1,7 @@
 package fr.intech.nfccommander.activities.fragments.commanders;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +48,7 @@ public class SMSCommanderFragment extends Fragment implements ICommander {
     private void buildView(View view) {
         form.editTextSMSMessage = (EditText) view.findViewById(R.id.fragment_commander_sms_edittext_message);
         form.editTextPhoneNumber = (EditText) view.findViewById(R.id.fragment_commander_sms_edittext_phonenumber);
-        //form.buttonSubmit = (Button) view.findViewById(0);
+        form.buttonSubmit = (Button) view.findViewById(R.id.fragment_commander_phone_button_submit);
 
         form.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +64,7 @@ public class SMSCommanderFragment extends Fragment implements ICommander {
         String smsMessage = form.editTextSMSMessage.getText().toString();
 
         if (phoneNumber.trim().isEmpty() || smsMessage.trim().isEmpty()) {
-            mainActivity.displayToast(R.string.error_form);
+            Snackbar.make(getView(), R.string.error_form, Snackbar.LENGTH_SHORT).show();
         } else {
             mainActivity.writeTag(EnumCommandType.SMS, new SMSCommand(phoneNumber, smsMessage));
         }

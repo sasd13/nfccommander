@@ -16,10 +16,8 @@ import android.widget.Toast;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import fr.intech.nfccommander.EnumCommandType;
 import fr.intech.nfccommander.R;
@@ -32,10 +30,9 @@ import fr.intech.nfccommander.tasks.TagTaskWriter;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String PREFERENCES_KEY_TAGS = "tags_ids";
     private static final String SEPARATOR = "#";
 
-    private List<String> linkedTags;
+    private List<Tag> linkedTags;
     private Tag chosenTag;
 
     @Override
@@ -45,22 +42,13 @@ public class MainActivity extends AppCompatActivity {
 
         linkedTags = new ArrayList<>();
 
-        loadSavedTags();
         startTagsListFragment();
-    }
-
-    private void loadSavedTags() {
-        Set<String> savedTags = PreferenceManager.getDefaultSharedPreferences(this).getStringSet(PREFERENCES_KEY_TAGS, null);
-
-        if (savedTags != null) {
-            linkedTags.addAll(Arrays.asList(savedTags.toArray(new String[savedTags.size()])));
-        }
     }
 
     private void startTagsListFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.activity_main_fragment_container, TagsListFragment.newInstance(linkedTags))
+                .replace(R.id.activity_main_fragment_container, TagsListFragment.newInstance())
                 .commit();
     }
 
@@ -101,15 +89,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (!linkedTags.contains(id)) {
             linkedTags.add(id);
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-            editor.putStringSet(PREFERENCES_KEY_TAGS, new HashSet<>(linkedTags));
-            editor.apply();
+
 
             displayToast(R.string.tag_saved);
         }
     }
 
-    public void showCommandersDialog() {
+    public void showCommandersDialog(String tagId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.fragment_tags_dialog_commander);
         builder.setItems(getResources().getStringArray(R.array.commanders), new DialogInterface.OnClickListener() {

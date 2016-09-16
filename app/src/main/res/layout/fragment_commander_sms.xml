@@ -28,6 +28,12 @@
             android:hint="@string/fragment_commander_sms_edittext_message_hint"
             android:inputType="textMultiLine"/>
 
+        <Button
+            android:id="@+id/fragment_commander_sms_button_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_submit"/>
+
     </LinearLayout>
 
 </FrameLayout>
