@@ -5,7 +5,7 @@ import android.content.Context;
 public class AppCommandLauncher implements ICommandLauncher {
 
     @Override
-    public void launch(String text, Context context) {
+    public void launch(Context context, String text) {
 
     }
 }

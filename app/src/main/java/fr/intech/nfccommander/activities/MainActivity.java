@@ -29,7 +29,8 @@ import fr.intech.nfccommander.activities.fragments.TagsFragment;
 import fr.intech.nfccommander.activities.fragments.commanders.CommanderFragmentFactory;
 import fr.intech.nfccommander.command.EnumCommanderType;
 import fr.intech.nfccommander.command.ICommander;
-import fr.intech.nfccommander.handlers.TagCommandHandler;
+import fr.intech.nfccommander.command.launcher.CommandLauncherFactory;
+import fr.intech.nfccommander.handlers.TagIOHandler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,15 +48,19 @@ public class MainActivity extends AppCompatActivity {
 
         linkedTags = new ArrayList<>();
 
+        loadSavedTags();
+         startTagsFragment();
+    }
+
+    private void loadSavedTags() {
         Set<String> savedTags = PreferenceManager.getDefaultSharedPreferences(this).getStringSet(PREFERENCES_KEY_TAGS, null);
+
         if (savedTags != null) {
             linkedTags.addAll(Arrays.asList(savedTags.toArray(new String[savedTags.size()])));
         }
-
-        listTagsFragment();
     }
 
-    private void listTagsFragment() {
+    private void startTagsFragment() {
         if (menuItem != null) {
             menuItem.setVisible(false);
         }
@@ -108,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             chosenTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
             saveTagIfNotListed();
-            launchCommand();
+            //launchCommand();
         }
     }
 
@@ -123,10 +128,6 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(this, R.string.tag_saved, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void launchCommand() {
-        TagCommandHandler.launchCommandOrShowCommanders(chosenTag, this);
     }
 
     public void showCommandersDialog() {
@@ -188,15 +189,18 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    public void onReadTagSucceeded(String text) {
+        String code = text.substring(0, text.indexOf(TagIOHandler.SEPARATOR));
+        String message = text.substring(text.indexOf(TagIOHandler.SEPARATOR) + 1);
+
+        CommandLauncherFactory.make(EnumCommanderType.find(code)).launch(this, message);
+    }
+
+    public void onWriteTagSucceeded() {
+        Toast.makeText(this, R.string.tag_writed, Toast.LENGTH_SHORT).show();
+    }
+
     public void onError(@StringRes int message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    public void onReadTagSuccess(String text) {
-
-    }
-
-    public void onWriteTagSuccess() {
-
     }
 }

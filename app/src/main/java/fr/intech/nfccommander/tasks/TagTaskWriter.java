@@ -42,6 +42,6 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        mainActivity.onWriteTagSuccess();
+        mainActivity.onWriteTagSucceeded();
     }
 }

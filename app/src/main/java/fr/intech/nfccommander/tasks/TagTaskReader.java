@@ -38,6 +38,6 @@ public class TagTaskReader extends AsyncTask<Tag, Intent, String> {
     protected void onPostExecute(String text) {
         super.onPostExecute(text);
 
-        mainActivity.onReadTagSuccess(text);
+        mainActivity.onReadTagSucceeded(text);
     }
 }

@@ -10,7 +10,7 @@ import android.support.v4.app.ActivityCompat;
 public class PhoneCommandLauncher implements ICommandLauncher {
 
     @Override
-    public void launch(String text, Context context) {
+    public void launch(Context context, String text) {
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + text));
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {

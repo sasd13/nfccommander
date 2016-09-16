@@ -4,5 +4,5 @@ import android.content.Context;
 
 public interface ICommandLauncher {
 
-    void launch(String text, Context context);
+    void launch(Context context, String text);
 }

@@ -12,7 +12,7 @@ import fr.intech.nfccommander.handlers.TagIOHandler;
 public class SMSCommandLauncher implements ICommandLauncher {
 
     @Override
-    public void launch(String text, Context context) {
+    public void launch(Context context, String text) {
         String phone = text.substring(0, text.indexOf(TagIOHandler.SEPARATOR));
         String message = text.substring(text.indexOf(TagIOHandler.SEPARATOR) + 1);
 
