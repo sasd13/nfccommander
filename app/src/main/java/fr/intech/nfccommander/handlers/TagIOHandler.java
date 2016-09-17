@@ -36,7 +36,7 @@ public class TagIOHandler {
         return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEnconding);
     }
 
-    public static void write(Tag tag, String text) throws UnsupportedEncodingException, FormatException, IOException {
+    public static void write(Tag tag, String text) throws FormatException, IOException {
         NdefRecord[] records = new NdefRecord[]{ createRecord(text) };
         NdefMessage message = new NdefMessage(records);
         Ndef ndef = Ndef.get(tag);

@@ -4,19 +4,16 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.view.View;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import fr.intech.nfccommander.EnumCommandType;
@@ -25,6 +22,8 @@ import fr.intech.nfccommander.activities.fragments.TagsListFragment;
 import fr.intech.nfccommander.activities.fragments.commanders.CommanderFactory;
 import fr.intech.nfccommander.command.CommandFactory;
 import fr.intech.nfccommander.command.ICommand;
+import fr.intech.nfccommander.handlers.TagIDHandler;
+import fr.intech.nfccommander.handlers.TagPreferencesHandler;
 import fr.intech.nfccommander.tasks.TagTaskReader;
 import fr.intech.nfccommander.tasks.TagTaskWriter;
 
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Tag> linkedTags;
     private Tag chosenTag;
+    private View parentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         linkedTags = new ArrayList<>();
+        parentView = findViewById(android.R.id.content);
 
         startTagsListFragment();
     }
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private void startTagsListFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.activity_main_fragment_container, TagsListFragment.newInstance())
+                .replace(R.id.activity_main_fragment_container, TagsListFragment.newInstance(linkedTags))
                 .commit();
     }
 
@@ -85,17 +86,81 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveTagIfNotListed() {
-        String id = new String(chosenTag.getId(), StandardCharsets.UTF_8);
+        if (findTagByID(TagIDHandler.getStringID(chosenTag.getId())) == null) {
+            linkedTags.add(chosenTag);
 
-        if (!linkedTags.contains(id)) {
-            linkedTags.add(id);
-
-
-            displayToast(R.string.tag_saved);
+            if (TagPreferencesHandler.saveTagID(this, chosenTag)) {
+                displaySnackbar(R.string.tag_saved);
+            }
         }
     }
 
-    public void showCommandersDialog(String tagId) {
+    private void displaySnackbar(@StringRes int message) {
+        Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private Tag findTagByID(String tagID) {
+        for (Tag tag : linkedTags) {
+            if (TagIDHandler.getStringID(tag.getId()).equals(tagID)) {
+                return tag;
+            }
+        }
+
+        return null;
+    }
+
+    public void readTag() {
+        new TagTaskReader(this, chosenTag).execute();
+    }
+
+    public void onReadTagSucceeded(String text) {
+        if (text == null) {
+            displaySnackbar(R.string.error_tag_no_message);
+            return;
+        }
+
+        int indexOfSeparator = text.indexOf(SEPARATOR);
+
+        if (indexOfSeparator >= 0) {
+            EnumCommandType type = findCommandTypeInMessage(text, indexOfSeparator);
+
+            if (type == null) {
+                displaySnackbar(R.string.error_tag_command_unknown);
+                return;
+            }
+
+            launchCommand(text, indexOfSeparator, type);
+        }
+    }
+
+    private EnumCommandType findCommandTypeInMessage(String text, int indexOfSeparator) {
+        String typeCode = text.substring(0, indexOfSeparator);
+
+        return EnumCommandType.find(typeCode);
+    }
+
+    private void launchCommand(String text, int indexOfSeparator, EnumCommandType type) {
+        String message = text.substring(indexOfSeparator + 1);
+        Intent intent = CommandFactory.make(type).read(this, message);
+
+        startActivity(intent);
+    }
+
+    public void onError(@StringRes int message) {
+        displaySnackbar(message);
+    }
+
+    public void tryToStartCommanderFragment(String tagID) {
+        chosenTag = findTagByID(tagID);
+
+        if (chosenTag != null) {
+            showCommanderChoiceDialog();
+        } else {
+            displaySnackbar(R.string.error_tag_not_connected);
+        }
+    }
+
+    private void showCommanderChoiceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.fragment_tags_dialog_commander);
         builder.setItems(getResources().getStringArray(R.array.commanders), new DialogInterface.OnClickListener() {
@@ -115,41 +180,11 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    public void readTag() {
-        new TagTaskReader(this, chosenTag).execute();
-    }
-
     public void writeTag(EnumCommandType type, ICommand command) {
         new TagTaskWriter(this, chosenTag).execute(type.getCode() + SEPARATOR + command.create());
     }
 
-    public void onReadTagSucceeded(String text) {
-        if (text == null) {
-            displayToast(R.string.error_tag_reading);
-            return;
-        }
-
-        int indexOfSeparator = text.indexOf(SEPARATOR);
-
-        if (indexOfSeparator >= 0) {
-            String code = text.substring(0, indexOfSeparator);
-            EnumCommandType type = EnumCommandType.find(code);
-
-            if (type == null) {
-                displayToast(R.string.error_tag_reading);
-                return;
-            }
-
-            String message = text.substring(indexOfSeparator + 1);
-            CommandFactory.make(type).read(this, message);
-        }
-    }
-
     public void onWriteTagSucceeded() {
-        displayToast(R.string.tag_writed);
-    }
-
-    public void displayToast(@StringRes int message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        displaySnackbar(R.string.tag_writed);
     }
 }

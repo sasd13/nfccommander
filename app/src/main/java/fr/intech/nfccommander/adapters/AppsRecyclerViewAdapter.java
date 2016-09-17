@@ -1,5 +1,6 @@
 package fr.intech.nfccommander.adapters;
 
+import android.content.pm.ApplicationInfo;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import fr.intech.nfccommander.R;
-import fr.intech.nfccommander.activities.MainActivity;
-import fr.intech.nfccommander.listeners.TagRecyclerViewItemListener;
+import fr.intech.nfccommander.activities.fragments.commanders.AppCommanderFragment;
+import fr.intech.nfccommander.listeners.AppRecyclerViewItemListener;
 
-public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
+public class AppsRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private static class TagViewHolder extends RecyclerView.ViewHolder {
 
@@ -27,12 +28,12 @@ public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private MainActivity mainActivity;
-    private List<String> tagsIDs;
+    private AppCommanderFragment appCommanderFragment;
+    private List<ApplicationInfo> apps;
 
-    public TagsRecyclerViewAdapter(MainActivity mainActivity, List<String> tagsIDs) {
-        this.mainActivity = mainActivity;
-        this.tagsIDs = tagsIDs;
+    public AppsRecyclerViewAdapter(AppCommanderFragment appCommanderFragment, List<ApplicationInfo> apps) {
+        this.appCommanderFragment = appCommanderFragment;
+        this.apps = apps;
     }
 
     @Override
@@ -46,12 +47,14 @@ public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         TagViewHolder tagViewHolder = (TagViewHolder) holder;
 
-        tagViewHolder.itemTextView.setText(tagsIDs.get(position));
-        tagViewHolder.itemViewRoot.setOnClickListener(new TagRecyclerViewItemListener(mainActivity, tagsIDs.get(position)));
+        ApplicationInfo app = apps.get(position);
+
+        tagViewHolder.itemTextView.setText(appCommanderFragment.getContext().getPackageManager().getApplicationLabel(app));
+        tagViewHolder.itemViewRoot.setOnClickListener(new AppRecyclerViewItemListener(appCommanderFragment, app));
     }
 
     @Override
     public int getItemCount() {
-        return tagsIDs.size();
+        return apps.size();
     }
 }

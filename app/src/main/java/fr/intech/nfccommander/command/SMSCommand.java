@@ -19,7 +19,7 @@ public class SMSCommand implements ICommand {
 
     @Override
     public String create() {
-        return SEPARATOR + phoneNumber + SEPARATOR + smsMessage;
+        return phoneNumber + SEPARATOR + smsMessage;
     }
 
     @Override

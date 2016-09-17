@@ -6,8 +6,6 @@ import android.net.Uri;
 
 public class PhoneCommand implements ICommand {
 
-    private static final String SEPARATOR = "#";
-
     private String phoneNumber;
 
     public PhoneCommand() {}

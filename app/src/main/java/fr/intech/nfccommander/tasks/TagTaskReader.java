@@ -14,6 +14,7 @@ public class TagTaskReader extends AsyncTask<Void, Intent, String> {
 
     private MainActivity mainActivity;
     private Tag tag;
+    private boolean readed;
 
     public TagTaskReader(MainActivity mainActivity, Tag tag) {
         this.mainActivity = mainActivity;
@@ -27,9 +28,9 @@ public class TagTaskReader extends AsyncTask<Void, Intent, String> {
         if (!isCancelled()) {
             try {
                 text = TagIOHandler.read(tag);
+                readed = true;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                mainActivity.displayToast(R.string.error_tag_reading);
             }
         }
 
@@ -40,6 +41,10 @@ public class TagTaskReader extends AsyncTask<Void, Intent, String> {
     protected void onPostExecute(String text) {
         super.onPostExecute(text);
 
-        mainActivity.onReadTagSucceeded(text);
+        if (readed) {
+            mainActivity.onReadTagSucceeded(text);
+        } else {
+            mainActivity.onError(R.string.error_tag_reading);
+        }
     }
 }

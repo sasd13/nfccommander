@@ -1,4 +1,4 @@
-package fr.intech.nfccommander.adapters;
+package fr.intech.nfccommander.listeners;
 
 import android.view.View;
 
@@ -7,15 +7,15 @@ import fr.intech.nfccommander.activities.MainActivity;
 public class TagRecyclerViewItemListener implements View.OnClickListener {
 
     private MainActivity mainActivity;
-    private String tagId;
+    private String tagID;
 
-    public TagRecyclerViewItemListener(MainActivity mainActivity, String tagId) {
+    public TagRecyclerViewItemListener(MainActivity mainActivity, String tagID) {
         this.mainActivity = mainActivity;
-        this.tagId = tagId;
+        this.tagID = tagID;
     }
 
     @Override
     public void onClick(View view) {
-        mainActivity.showCommandersDialog(tagId);
+        mainActivity.tryToStartCommanderFragment(tagID);
     }
 }

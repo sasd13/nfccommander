@@ -46,9 +46,9 @@ public class SMSCommanderFragment extends Fragment implements ICommander {
     }
 
     private void buildView(View view) {
-        form.editTextSMSMessage = (EditText) view.findViewById(R.id.fragment_commander_sms_edittext_message);
         form.editTextPhoneNumber = (EditText) view.findViewById(R.id.fragment_commander_sms_edittext_phonenumber);
-        form.buttonSubmit = (Button) view.findViewById(R.id.fragment_commander_phone_button_submit);
+        form.editTextSMSMessage = (EditText) view.findViewById(R.id.fragment_commander_sms_edittext_message);
+        form.buttonSubmit = (Button) view.findViewById(R.id.fragment_commander_sms_button_submit);
 
         form.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -15,6 +15,7 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
 
     private MainActivity mainActivity;
     private Tag tag;
+    private boolean written;
 
     public TagTaskWriter(MainActivity mainActivity, Tag tag) {
         this.mainActivity = mainActivity;
@@ -26,9 +27,9 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
         if (!isCancelled()) {
             try {
                 TagIOHandler.write(tag, texts[0]);
+                written = true;
             } catch (FormatException | IOException e) {
                 e.printStackTrace();
-                mainActivity.displayToast(R.string.error_tag_writing);
             }
         }
 
@@ -39,6 +40,10 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        mainActivity.onWriteTagSucceeded();
+        if (written) {
+            mainActivity.onWriteTagSucceeded();
+        } else {
+            mainActivity.onError(R.string.error_tag_writing);
+        }
     }
 }
