@@ -1,26 +1,25 @@
 <resources>
     <string name="app_name">NFC Commander</string>
-    <string name="fragment_commander_phone_textview_phonenumber">Enter the phone number</string>
-    <string name="fragment_commander_phone_edittext_phonenumber_hint">phone</string>
-    <string name="fragment_commander_sms_textview_message">Enter the message</string>
-    <string name="fragment_commander_sms_edittext_message_hint">sms</string>
-    <string name="activity_main_menu_done">Done</string>
-    <string name="fragment_tags_dialog_commander">Choose commander</string>
+    <string name="tag_saved">Tag saved</string>
+    <string name="dialog_commanders">Choose commander</string>
     <string-array name="commanders">
         <item>Phone</item>
         <item>SMS</item>
         <item>App</item>
     </string-array>
     <string name="recyclerview_item_textview">Item</string>
-    <string name="tag_saved">Tag saved</string>
-    <string name="error_tag_not_connected">Error tag not connected</string>
-    <string name="error_tag_writing">Error tag writing</string>
-    <string name="tag_writed">Tag writed</string>
-    <string name="error_tag_launch_command">Error tag launch command</string>
-    <string name="error_tag_reading">Error tag reading</string>
+    <string name="error_tag_not_linked">Tag not linked</string>
+    <string name="button_submit">Submit</string>
+    <string name="error_form">Error form</string>
+    <string name="error_tag_not_connected">Tag not connected</string>
+    <string name="error_tag_writing">Tag not written</string>
+    <string name="tag_written">Tag written</string>
+    <string name="error_tag_reading">Tag not readed</string>
     <string name="error_tag_no_message">Tag has no message</string>
     <string name="error_tag_command_unknown">Tag has no known command</string>
-    <string name="error_form">Error form</string>
-    <string name="button_submit">Submit</string>
+    <string name="fragment_commander_phone_textview_phonenumber">Enter the phone number</string>
+    <string name="fragment_commander_phone_edittext_phonenumber_hint">phone</string>
+    <string name="fragment_commander_sms_textview_message">Enter the message</string>
+    <string name="fragment_commander_sms_edittext_message_hint">sms</string>
     <string name="fragment_commander_app_textview_choice">Choose the application to run:</string>
 </resources>

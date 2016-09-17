@@ -15,12 +15,12 @@ import fr.intech.nfccommander.listeners.AppRecyclerViewItemListener;
 
 public class AppsRecyclerViewAdapter extends RecyclerView.Adapter {
 
-    private static class TagViewHolder extends RecyclerView.ViewHolder {
+    private static class AppViewHolder extends RecyclerView.ViewHolder {
 
         private View itemViewRoot;
         private TextView itemTextView;
 
-        public TagViewHolder(View view) {
+        public AppViewHolder(View view) {
             super(view);
 
             itemViewRoot = view;
@@ -40,17 +40,17 @@ public class AppsRecyclerViewAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false);
 
-        return new TagViewHolder(view);
+        return new AppViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        TagViewHolder tagViewHolder = (TagViewHolder) holder;
+        AppViewHolder appViewHolder = (AppViewHolder) holder;
 
         ApplicationInfo app = apps.get(position);
 
-        tagViewHolder.itemTextView.setText(appCommanderFragment.getContext().getPackageManager().getApplicationLabel(app));
-        tagViewHolder.itemViewRoot.setOnClickListener(new AppRecyclerViewItemListener(appCommanderFragment, app));
+        appViewHolder.itemTextView.setText(appCommanderFragment.getContext().getPackageManager().getApplicationLabel(app));
+        appViewHolder.itemViewRoot.setOnClickListener(new AppRecyclerViewItemListener(appCommanderFragment, app));
     }
 
     @Override

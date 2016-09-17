@@ -13,9 +13,13 @@ import fr.intech.nfccommander.handlers.TagIOHandler;
 
 public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
 
+    private static final int TYPE_ERROR_FORMAT = 1;
+    private static final int TYPE_ERROR_IO = 2;
+
     private MainActivity mainActivity;
     private Tag tag;
     private boolean written;
+    private int typeError;
 
     public TagTaskWriter(MainActivity mainActivity, Tag tag) {
         this.mainActivity = mainActivity;
@@ -28,7 +32,11 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
             try {
                 TagIOHandler.write(tag, texts[0]);
                 written = true;
-            } catch (FormatException | IOException e) {
+            } catch (FormatException e) {
+                typeError = TYPE_ERROR_FORMAT;
+                e.printStackTrace();
+            } catch (IOException e) {
+                typeError = TYPE_ERROR_IO;
                 e.printStackTrace();
             }
         }
@@ -43,7 +51,14 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
         if (written) {
             mainActivity.onWriteTagSucceeded();
         } else {
-            mainActivity.onError(R.string.error_tag_writing);
+            switch (typeError) {
+                case TYPE_ERROR_FORMAT:
+                    mainActivity.onError(R.string.error_tag_writing);
+                    break;
+                case TYPE_ERROR_IO:
+                    mainActivity.onError(R.string.error_tag_not_connected);
+                    break;
+            }
         }
     }
 }

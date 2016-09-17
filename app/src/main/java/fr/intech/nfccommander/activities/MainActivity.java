@@ -156,13 +156,13 @@ public class MainActivity extends AppCompatActivity {
         if (chosenTag != null) {
             showCommanderChoiceDialog();
         } else {
-            displaySnackbar(R.string.error_tag_not_connected);
+            displaySnackbar(R.string.error_tag_not_linked);
         }
     }
 
     private void showCommanderChoiceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.fragment_tags_dialog_commander);
+        builder.setTitle(R.string.dialog_commanders);
         builder.setItems(getResources().getStringArray(R.array.commanders), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -185,6 +185,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onWriteTagSucceeded() {
-        displaySnackbar(R.string.tag_writed);
+        displaySnackbar(R.string.tag_written);
     }
 }
