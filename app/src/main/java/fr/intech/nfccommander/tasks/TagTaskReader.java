@@ -10,10 +10,24 @@ import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.MainActivity;
 import fr.intech.nfccommander.handlers.TagIOHandler;
 
+/**
+ * Tag reading AsyncTask
+ */
 public class TagTaskReader extends AsyncTask<Void, Intent, String> {
 
+    /**
+     * Main activity
+     */
     private MainActivity mainActivity;
+
+    /**
+     * The tag to read
+     */
     private Tag tag;
+
+    /**
+     * The flag if the reading is performed
+     */
     private boolean readed;
 
     public TagTaskReader(MainActivity mainActivity, Tag tag) {

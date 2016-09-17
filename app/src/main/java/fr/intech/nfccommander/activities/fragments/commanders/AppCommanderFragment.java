@@ -19,10 +19,21 @@ import fr.intech.nfccommander.activities.MainActivity;
 import fr.intech.nfccommander.adapters.AppsRecyclerViewAdapter;
 import fr.intech.nfccommander.command.AppCommand;
 
+/**
+ * App commander fragment
+ */
 public class AppCommanderFragment extends Fragment implements ICommander {
 
     private MainActivity mainActivity;
+
+    /**
+     * List of installed apps on the phone
+     */
     private List<ApplicationInfo> apps;
+
+    /**
+     * The selected app for the command
+     */
     private ApplicationInfo chosenApp;
 
     public static AppCommanderFragment newInstance() {
@@ -36,10 +47,13 @@ public class AppCommanderFragment extends Fragment implements ICommander {
         mainActivity = (MainActivity) getActivity();
         apps = new ArrayList<>();
 
-        findAppsWithLauncher();
+        pickOutAppsWithLauncher();
     }
 
-    private void findAppsWithLauncher() {
+    /**
+     * Get only installed apps with launcher
+     */
+    private void pickOutAppsWithLauncher() {
         PackageManager packageManager = getContext().getPackageManager();
         List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
@@ -59,6 +73,10 @@ public class AppCommanderFragment extends Fragment implements ICommander {
         return view;
     }
 
+    /**
+     * Build fragment view
+     * @param view      the content view of the fragment
+     */
     private void buildView(View view) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_commander_app_recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -66,12 +84,16 @@ public class AppCommanderFragment extends Fragment implements ICommander {
         recyclerView.setAdapter(new AppsRecyclerViewAdapter(this, apps));
     }
 
+    /**
+     * Called by the RecyclerView item listener when an app was chosen
+     * @param chosenApp     the selected app
+     */
     public void setChosenApp(ApplicationInfo chosenApp) {
         this.chosenApp = chosenApp;
     }
 
     @Override
-    public void saveCommand() {
+    public void command() {
         mainActivity.writeTag(EnumCommandType.APP, new AppCommand(chosenApp.packageName));
     }
 }

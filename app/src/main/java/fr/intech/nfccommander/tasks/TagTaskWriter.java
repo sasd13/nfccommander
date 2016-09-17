@@ -11,14 +11,32 @@ import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.MainActivity;
 import fr.intech.nfccommander.handlers.TagIOHandler;
 
+/**
+ * Tag writing AsyncTask
+ */
 public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
 
     private static final int TYPE_ERROR_FORMAT = 1;
     private static final int TYPE_ERROR_IO = 2;
 
+    /**
+     * Main activity
+     */
     private MainActivity mainActivity;
+
+    /**
+     * The tag to write
+     */
     private Tag tag;
+
+    /**
+     * The flag if the writing is performed
+     */
     private boolean written;
+
+    /**
+     * The flag of error type
+     */
     private int typeError;
 
     public TagTaskWriter(MainActivity mainActivity, Tag tag) {

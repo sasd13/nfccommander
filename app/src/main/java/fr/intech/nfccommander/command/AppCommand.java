@@ -3,8 +3,14 @@ package fr.intech.nfccommander.command;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * App command
+ */
 public class AppCommand implements ICommand {
 
+    /**
+     * The app package name
+     */
     private String appPackage;
 
     public AppCommand() {}

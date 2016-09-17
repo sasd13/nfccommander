@@ -14,13 +14,22 @@ import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.MainActivity;
 import fr.intech.nfccommander.command.PhoneCommand;
 
+/**
+ * Phone commander fragment
+ */
 public class PhoneCommanderFragment extends Fragment implements ICommander {
 
+    /**
+     * Class form
+     */
     private static class ViewHolder {
         private EditText editTextPhoneNumber;
         private Button buttonSubmit;
     }
 
+    /**
+     * The form
+     */
     private ViewHolder form;
     private MainActivity mainActivity;
 
@@ -45,6 +54,10 @@ public class PhoneCommanderFragment extends Fragment implements ICommander {
         return view;
     }
 
+    /**
+     * Build the fragment view
+     * @param view      the content view of the fragment
+     */
     private void buildView(View view) {
         form.editTextPhoneNumber = (EditText) view.findViewById(R.id.fragment_commander_phone_edittext_phonenumber);
         form.buttonSubmit = (Button) view.findViewById(R.id.fragment_commander_phone_button_submit);
@@ -52,13 +65,13 @@ public class PhoneCommanderFragment extends Fragment implements ICommander {
         form.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveCommand();
+                command();
             }
         });
     }
 
     @Override
-    public void saveCommand() {
+    public void command() {
         String phoneNumber = form.editTextPhoneNumber.getText().toString();
 
         if (phoneNumber.trim().isEmpty()) {

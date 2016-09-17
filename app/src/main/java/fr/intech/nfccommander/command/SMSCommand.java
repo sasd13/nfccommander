@@ -4,11 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+/**
+ * SMS command
+ */
 public class SMSCommand implements ICommand {
 
     private static final String SEPARATOR = "#";
 
-    private String phoneNumber, smsMessage;
+    /**
+     * The phone number
+     */
+    private String phoneNumber;
+
+    /**
+     * The SMS message
+     */
+    private String smsMessage;
 
     public SMSCommand() {}
 

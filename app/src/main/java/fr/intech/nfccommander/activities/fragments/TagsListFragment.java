@@ -18,10 +18,24 @@ import fr.intech.nfccommander.adapters.TagsRecyclerViewAdapter;
 import fr.intech.nfccommander.handlers.TagIDHandler;
 import fr.intech.nfccommander.handlers.TagPreferencesHandler;
 
+/**
+ * Tags list fragment
+ */
 public class TagsListFragment extends Fragment {
 
+    /**
+     * The history of associated tags
+     */
     private List<Tag> linkedTags;
+
+    /**
+     * The tags IDs displayed in the RecyclerView
+     */
     private List<String> tagsIDs;
+
+    /**
+     * The adapter of the recyclerView
+     */
     private TagsRecyclerViewAdapter adapter;
 
     public static TagsListFragment newInstance(List<Tag> linkedTags) {
@@ -47,6 +61,10 @@ public class TagsListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Build the fragment view
+     * @param view      The content view of the fragment
+     */
     private void buildView(View view) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_tags_recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -63,6 +81,9 @@ public class TagsListFragment extends Fragment {
         addLinkedTagsIDsToList();
     }
 
+    /**
+     * Called by onResume to refresh the listed tags IDs when new tag was associated
+     */
     private void addLinkedTagsIDsToList() {
         String tagID;
 

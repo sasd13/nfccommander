@@ -13,6 +13,9 @@ import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.fragments.commanders.AppCommanderFragment;
 import fr.intech.nfccommander.listeners.AppRecyclerViewItemListener;
 
+/**
+ * Adapter for apps RecyclerView
+ */
 public class AppsRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private static class AppViewHolder extends RecyclerView.ViewHolder {
@@ -28,7 +31,14 @@ public class AppsRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * App commander fragment
+     */
     private AppCommanderFragment appCommanderFragment;
+
+    /**
+     * Apps to list in the RecyclerView
+     */
     private List<ApplicationInfo> apps;
 
     public AppsRecyclerViewAdapter(AppCommanderFragment appCommanderFragment, List<ApplicationInfo> apps) {

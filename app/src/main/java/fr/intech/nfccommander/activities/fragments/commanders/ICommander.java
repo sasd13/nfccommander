@@ -1,6 +1,12 @@
 package fr.intech.nfccommander.activities.fragments.commanders;
 
+/**
+ * Commander interface
+ */
 public interface ICommander {
 
-    void saveCommand();
+    /**
+     * Called by commanders to create a command
+     */
+    void command();
 }

@@ -27,13 +27,31 @@ import fr.intech.nfccommander.handlers.TagPreferencesHandler;
 import fr.intech.nfccommander.tasks.TagTaskReader;
 import fr.intech.nfccommander.tasks.TagTaskWriter;
 
+/**
+ * Application main activity
+ */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Separator used in the tag message to separe
+     * the command type code and the command command message
+     */
     private static final String SEPARATOR = "#";
 
+    /**
+     * History of associated tags since Application start
+     */
     private List<Tag> linkedTags;
+
+    /**
+     * Current associated tag
+     */
     private Tag chosenTag;
-    private View parentView;
+
+    /**
+     * Activity content view, used to display Snackbar
+     */
+    private View contentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +59,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         linkedTags = new ArrayList<>();
-        parentView = findViewById(android.R.id.content);
+        contentView = findViewById(android.R.id.content);
 
         startTagsListFragment();
     }
 
+    /**
+     * Start the fragment for list of tags
+     */
     private void startTagsListFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -57,6 +78,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        enableForegroundDispatch();
+    }
+
+    /**
+     * Enable tag foreground dispatch when activity is resumed
+     */
+    private void enableForegroundDispatch() {
         PendingIntent intent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, intent, null, null);
     }
@@ -65,6 +93,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
+        disableForegroundDispatch();
+    }
+
+    /**
+     * Disable tag foreground dispatch when activity is paused
+     */
+    private void disableForegroundDispatch() {
         if (NfcAdapter.getDefaultAdapter(this) != null) {
             NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
         }
@@ -76,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
         processIntent(getIntent());
     }
 
+    /**
+     * Process new intents
+     * @param intent    the intent to proceed
+     */
     private void processIntent(Intent intent) {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             chosenTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -85,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Save new tags in preferences if they had never been associated
+     */
     private void saveTagIfNotListed() {
         if (findTagByID(TagIDHandler.getStringID(chosenTag.getId())) == null) {
             linkedTags.add(chosenTag);
@@ -95,10 +137,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Display messages in Snackbar
+     * @param message   the message ResID to display
+     */
     private void displaySnackbar(@StringRes int message) {
-        Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(contentView, message, Snackbar.LENGTH_SHORT).show();
     }
 
+    /**
+     * Find tag in associated tags history
+     * @param tagID     the ID of the tag
+     * @return          the tag if listed or null if not
+     */
     private Tag findTagByID(String tagID) {
         for (Tag tag : linkedTags) {
             if (TagIDHandler.getStringID(tag.getId()).equals(tagID)) {
@@ -109,47 +160,75 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * Read message from the current associated tag
+     */
     public void readTag() {
         new TagTaskReader(this, chosenTag).execute();
     }
 
-    public void onReadTagSucceeded(String text) {
-        if (text == null) {
+    /**
+     * Called by the AsyncTask for reading tag on its onPostExecute method
+     * when the reading is succeeded
+     * @param tagMessage    the text message readead from the tag
+     */
+    public void onReadTagSucceeded(String tagMessage) {
+        if (tagMessage == null) {
             displaySnackbar(R.string.error_tag_no_message);
             return;
         }
 
-        int indexOfSeparator = text.indexOf(SEPARATOR);
+        int indexOfSeparator = tagMessage.indexOf(SEPARATOR);
 
         if (indexOfSeparator >= 0) {
-            EnumCommandType type = findCommandTypeInMessage(text, indexOfSeparator);
+            EnumCommandType commandType = findCommandTypeInMessage(tagMessage, indexOfSeparator);
 
-            if (type == null) {
+            if (commandType == null) {
                 displaySnackbar(R.string.error_tag_command_unknown);
                 return;
             }
 
-            launchCommand(text, indexOfSeparator, type);
+            String commandMessage = tagMessage.substring(indexOfSeparator + 1);
+
+            launchCommand(commandType, commandMessage);
         }
     }
 
-    private EnumCommandType findCommandTypeInMessage(String text, int indexOfSeparator) {
-        String typeCode = text.substring(0, indexOfSeparator);
+    /**
+     * Find command type in tag readed message
+     * @param tagMessage        the tag message
+     * @param indexOfSeparator  the index of the separator
+     * @return                  the command type if found or null if not
+     */
+    private EnumCommandType findCommandTypeInMessage(String tagMessage, int indexOfSeparator) {
+        String typeCode = tagMessage.substring(0, indexOfSeparator);
 
         return EnumCommandType.find(typeCode);
     }
 
-    private void launchCommand(String text, int indexOfSeparator, EnumCommandType type) {
-        String message = text.substring(indexOfSeparator + 1);
+    /**
+     * Execute the command in the tag message
+     * @param type      the command type
+     * @param message   the command message
+     */
+    private void launchCommand(EnumCommandType type, String message) {
         Intent intent = CommandFactory.make(type).read(this, message);
 
         startActivity(intent);
     }
 
+    /**
+     * Called by classes out the MainActivity scope to display error messages
+     * @param message   the error message to display
+     */
     public void onError(@StringRes int message) {
         displaySnackbar(message);
     }
 
+    /**
+     * Called when user click on tag item in the tags list fromTagsListFragment
+     * @param tagID     the ID of the clicked tag item
+     */
     public void tryToStartCommanderFragment(String tagID) {
         chosenTag = findTagByID(tagID);
 
@@ -160,6 +239,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Show dialog box to chose a commander (Phone, SMS, App...)
+     */
     private void showCommanderChoiceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_commanders);
@@ -172,6 +254,10 @@ public class MainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    /**
+     * Start the chosen commander fragment
+     * @param type  the type of the chosen commander
+     */
     private void startCommanderFragment(EnumCommandType type) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -180,10 +266,21 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /**
+     * Called by the command fragment to write message in the current associated tag
+     * @param type      the type of the command
+     * @param command   the command of the commander
+     */
     public void writeTag(EnumCommandType type, ICommand command) {
-        new TagTaskWriter(this, chosenTag).execute(type.getCode() + SEPARATOR + command.create());
+        String tagMessage = type.getCode() + SEPARATOR + command.create();
+
+        new TagTaskWriter(this, chosenTag).execute(tagMessage);
     }
 
+    /**
+     * Called by the AsyncTask for writing tag on its onPostExecute method
+     * when the writing is succeeded
+     */
     public void onWriteTagSucceeded() {
         displaySnackbar(R.string.tag_written);
     }

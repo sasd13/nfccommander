@@ -10,8 +10,17 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+/**
+ * Handler for tag input and output
+ */
 public class TagIOHandler {
 
+    /**
+     * Read the message from the tag
+     * @param tag       the tag to read
+     * @return          the message readed
+     * @throws UnsupportedEncodingException
+     */
     public static String read(Tag tag) throws UnsupportedEncodingException {
         Ndef ndef = Ndef.get(tag);
         if (ndef != null) {
@@ -28,6 +37,12 @@ public class TagIOHandler {
         return null;
     }
 
+    /**
+     * Read the tag record
+     * @param ndefRecord        the tag record
+     * @return                  the record message
+     * @throws UnsupportedEncodingException
+     */
     private static String readRecord(NdefRecord ndefRecord) throws UnsupportedEncodingException {
         byte[] payload = ndefRecord.getPayload();
         String textEnconding = (payload[0] & 128) == 0 ? "UTF-8" : "UTF-16";
@@ -36,6 +51,13 @@ public class TagIOHandler {
         return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEnconding);
     }
 
+    /**
+     * Write the text message in tag
+     * @param tag       the tag to write
+     * @param text      the text message
+     * @throws FormatException
+     * @throws IOException
+     */
     public static void write(Tag tag, String text) throws FormatException, IOException {
         NdefRecord[] records = new NdefRecord[]{ createRecord(text) };
         NdefMessage message = new NdefMessage(records);
@@ -45,6 +67,12 @@ public class TagIOHandler {
         ndef.close();
     }
 
+    /**
+     * Create a tag record with the given text message
+     * @param text      the text message
+     * @return          the record created
+     * @throws UnsupportedEncodingException
+     */
     private static NdefRecord createRecord(String text) throws UnsupportedEncodingException {
         String lang = "en";
         byte[] textBytes = text.getBytes();

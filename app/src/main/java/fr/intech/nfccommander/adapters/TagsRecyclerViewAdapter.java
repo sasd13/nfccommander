@@ -12,6 +12,9 @@ import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.MainActivity;
 import fr.intech.nfccommander.listeners.TagRecyclerViewItemListener;
 
+/**
+ * Adapter for tags RecyclerView
+ */
 public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private static class TagViewHolder extends RecyclerView.ViewHolder {
@@ -27,7 +30,14 @@ public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * Main activity
+     */
     private MainActivity mainActivity;
+
+    /**
+     * The tags IDs to list in the RecyclerView
+     */
     private List<String> tagsIDs;
 
     public TagsRecyclerViewAdapter(MainActivity mainActivity, List<String> tagsIDs) {
