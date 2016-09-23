@@ -1,4 +1,4 @@
-package fr.intech.nfccommander.command;
+package fr.intech.nfccommander.commands;
 
 import fr.intech.nfccommander.EnumCommandType;
 

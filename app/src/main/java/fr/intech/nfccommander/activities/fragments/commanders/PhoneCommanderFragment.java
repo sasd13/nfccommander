@@ -12,7 +12,7 @@ import android.widget.EditText;
 import fr.intech.nfccommander.EnumCommandType;
 import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.MainActivity;
-import fr.intech.nfccommander.command.PhoneCommand;
+import fr.intech.nfccommander.commands.PhoneCommand;
 
 /**
  * Phone commander fragment

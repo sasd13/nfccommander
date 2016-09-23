@@ -1,7 +1,8 @@
-package fr.intech.nfccommander.command;
+package fr.intech.nfccommander.commands;
 
-import android.content.Context;
 import android.content.Intent;
+
+import fr.intech.nfccommander.activities.MainActivity;
 
 /**
  * App command
@@ -25,7 +26,9 @@ public class AppCommand implements ICommand {
     }
 
     @Override
-    public Intent read(Context context, String message) {
-        return context.getPackageManager().getLaunchIntentForPackage(message);
+    public void read(String message, MainActivity mainActivity) {
+        Intent intent = mainActivity.getPackageManager().getLaunchIntentForPackage(message);
+
+        mainActivity.startActivity(intent);
     }
 }

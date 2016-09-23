@@ -20,8 +20,8 @@ import fr.intech.nfccommander.EnumCommandType;
 import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.fragments.TagsListFragment;
 import fr.intech.nfccommander.activities.fragments.commanders.CommanderFactory;
-import fr.intech.nfccommander.command.CommandFactory;
-import fr.intech.nfccommander.command.ICommand;
+import fr.intech.nfccommander.commands.CommandFactory;
+import fr.intech.nfccommander.commands.ICommand;
 import fr.intech.nfccommander.handlers.TagIDHandler;
 import fr.intech.nfccommander.handlers.TagPreferencesHandler;
 import fr.intech.nfccommander.tasks.TagTaskReader;
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Separator used in the tag message to separe
-     * the command type code and the command command message
+     * the command type code and the command message
      */
     private static final String SEPARATOR = "#";
 
@@ -138,14 +138,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Display messages in Snackbar
-     * @param message   the message ResID to display
-     */
-    private void displaySnackbar(@StringRes int message) {
-        Snackbar.make(contentView, message, Snackbar.LENGTH_SHORT).show();
-    }
-
-    /**
      * Find tag in associated tags history
      * @param tagID     the ID of the tag
      * @return          the tag if listed or null if not
@@ -161,10 +153,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Display messages in Snackbar
+     * @param message   the message ResID to display
+     */
+    private void displaySnackbar(@StringRes int message) {
+        Snackbar.make(contentView, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    /**
      * Read message from the current associated tag
      */
     public void readTag() {
-        new TagTaskReader(this, chosenTag).execute();
+        new TagTaskReader(chosenTag, this).execute();
     }
 
     /**
@@ -212,9 +212,7 @@ public class MainActivity extends AppCompatActivity {
      * @param message   the command message
      */
     private void launchCommand(EnumCommandType type, String message) {
-        Intent intent = CommandFactory.make(type).read(this, message);
-
-        startActivity(intent);
+        CommandFactory.make(type).read(message, this);
     }
 
     /**
@@ -272,9 +270,12 @@ public class MainActivity extends AppCompatActivity {
      * @param command   the command of the commander
      */
     public void writeTag(EnumCommandType type, ICommand command) {
-        String tagMessage = type.getCode() + SEPARATOR + command.create();
+        StringBuilder builder = new StringBuilder();
+        builder.append(type.getCode());
+        builder.append(SEPARATOR);
+        builder.append(command.create());
 
-        new TagTaskWriter(this, chosenTag).execute(tagMessage);
+        new TagTaskWriter(chosenTag, this).execute(builder.toString());
     }
 
     /**

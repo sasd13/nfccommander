@@ -17,7 +17,7 @@ import fr.intech.nfccommander.EnumCommandType;
 import fr.intech.nfccommander.R;
 import fr.intech.nfccommander.activities.MainActivity;
 import fr.intech.nfccommander.adapters.AppsRecyclerViewAdapter;
-import fr.intech.nfccommander.command.AppCommand;
+import fr.intech.nfccommander.commands.AppCommand;
 
 /**
  * App commander fragment

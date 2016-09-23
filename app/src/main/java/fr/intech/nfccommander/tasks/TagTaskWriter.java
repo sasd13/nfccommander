@@ -16,18 +16,18 @@ import fr.intech.nfccommander.handlers.TagIOHandler;
  */
 public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
 
-    private static final int TYPE_ERROR_FORMAT = 1;
-    private static final int TYPE_ERROR_IO = 2;
-
-    /**
-     * Main activity
-     */
-    private MainActivity mainActivity;
+    private static final int ERROR_FORMAT = 1;
+    private static final int ERROR_IO = 2;
 
     /**
      * The tag to write
      */
     private Tag tag;
+
+    /**
+     * Main activity
+     */
+    private MainActivity mainActivity;
 
     /**
      * The flag if the writing is performed
@@ -39,9 +39,9 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
      */
     private int typeError;
 
-    public TagTaskWriter(MainActivity mainActivity, Tag tag) {
-        this.mainActivity = mainActivity;
+    public TagTaskWriter(Tag tag, MainActivity mainActivity) {
         this.tag = tag;
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -51,10 +51,10 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
                 TagIOHandler.write(tag, texts[0]);
                 written = true;
             } catch (FormatException e) {
-                typeError = TYPE_ERROR_FORMAT;
+                typeError = ERROR_FORMAT;
                 e.printStackTrace();
             } catch (IOException e) {
-                typeError = TYPE_ERROR_IO;
+                typeError = ERROR_IO;
                 e.printStackTrace();
             }
         }
@@ -70,10 +70,10 @@ public class TagTaskWriter extends AsyncTask<String, Intent, Void> {
             mainActivity.onWriteTagSucceeded();
         } else {
             switch (typeError) {
-                case TYPE_ERROR_FORMAT:
+                case ERROR_FORMAT:
                     mainActivity.onError(R.string.error_tag_writing);
                     break;
-                case TYPE_ERROR_IO:
+                case ERROR_IO:
                     mainActivity.onError(R.string.error_tag_not_connected);
                     break;
             }

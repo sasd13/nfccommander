@@ -64,9 +64,9 @@ public class TagPreferencesHandler {
     public static List<String> loadSavedTagsIDs(Context context) {
         List<String> tagsIDs = new ArrayList<>();
 
-        Set<String> savedTags = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(PREFERENCES_KEY_TAGS, null);
-        if (savedTags != null) {
-            tagsIDs.addAll(savedTags);
+        Set<String> savedTagsIDs = PreferenceManager.getDefaultSharedPreferences(context).getStringSet(PREFERENCES_KEY_TAGS, null);
+        if (savedTagsIDs != null) {
+            tagsIDs.addAll(savedTagsIDs);
         }
 
         return tagsIDs;
