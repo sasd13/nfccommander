@@ -56,8 +56,10 @@ public class TagsRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         TagViewHolder tagViewHolder = (TagViewHolder) holder;
 
-        tagViewHolder.itemTextView.setText(tagsIDs.get(position));
-        tagViewHolder.itemViewRoot.setOnClickListener(new TagRecyclerViewItemListener(mainActivity, tagsIDs.get(position)));
+        String tagID = tagsIDs.get(position);
+
+        tagViewHolder.itemTextView.setText(tagID);
+        tagViewHolder.itemViewRoot.setOnClickListener(new TagRecyclerViewItemListener(mainActivity, tagID));
     }
 
     @Override

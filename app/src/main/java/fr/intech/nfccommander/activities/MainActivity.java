@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onNewIntent(Intent intent) {
         setIntent(intent);
-        processIntent(getIntent());
+        processIntent(intent);
     }
 
     /**
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Read message from the current associated tag
      */
-    public void readTag() {
+    private void readTag() {
         new TagTaskReader(chosenTag, this).execute();
     }
 
